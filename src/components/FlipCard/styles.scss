@@ -1,0 +1,72 @@
+$cardsURL: "http://www.gamedev.net/uploads/monthly_08_2011/post-187318-0-08761000-1313062210.png";
+$cardWidth: 79px;
+$cardHeight: 123px;
+$cardSuits: "club", "diamond", "heart", "spade";
+$cardRanks: "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K";
+
+%cardBase {
+  display: inline-block;
+  overflow: hidden;
+  width: $cardWidth;
+  height: $cardHeight;
+}
+
+%sideBase {
+  background: transparent url($cardsURL) no-repeat top left;
+  backface-visibility: hidden;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.card {
+  @extend %cardBase;
+  perspective: 1000px;
+  &.flipped {
+  }
+}
+
+.flipper {
+  @extend %cardBase;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.front {
+  @extend %cardBase;
+  @extend %sideBase;
+  z-index: 2;
+  transform: rotateY(180deg);
+  &.flipped {
+    transform: rotateY(0deg);
+  }
+}
+
+.back {
+  @extend %cardBase;
+  @extend %sideBase;
+  background-position: 0 -4 * $cardHeight;
+  transform: rotateY(0deg);
+  &.flipped {
+    transform: rotateY(-180deg);
+  }
+}
+
+// Generate front faces
+@each $suit in $cardSuits {
+    $i: index($cardSuits, $suit);
+    @each $rank in $cardRanks {
+      $j: index($cardRanks, $rank);
+        .#{$suit}#{$rank} {
+          background-position: ((-$j + 1) * $cardWidth) ((-$i + 1) * $cardHeight);
+        }
+    }
+}
+
+
+
+
+
